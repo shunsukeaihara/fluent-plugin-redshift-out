@@ -80,9 +80,9 @@ Example (watch and upload json formatted apache log):
 
 + `type` (required) : The value must be `redshift-out`.
 
-+ `aws_key_id` (required) : AWS access key id to access s3 bucket.
++ `aws_key_id` : AWS access key id to access s3 bucket.
 
-+ `aws_sec_key` (required) : AWS securet key id to access s3 bucket.
++ `aws_sec_key` : AWS securet key id to access s3 bucket.
 
 + `s3_bucket` (required) : s3 bucket name. S3 bucket must be same as the region of your Redshift cluster.
 
