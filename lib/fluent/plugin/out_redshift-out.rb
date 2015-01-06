@@ -118,9 +118,9 @@ class RedshiftOutput < BufferedOutput
     s3_uri = "s3://#{@s3_bucket}/#{s3path}"
     credentials = @s3.client.credential_provider.credentials
     sql = "copy #{table_name_with_schema} from '#{s3_uri}'"
-    sql += " CREDENTIALS 'aws_access_key_id=#{credentials[:access_key_id]}; aws_secret_access_key=#{credentials[:secret_access_key]};"
-    sql += " token=#{credentials[:session_token]};" if credentials[:session_token]
-    sql += " delimiter '#{@delimiter}' GZIP ESCAPE #{@redshift_copy_base_options} #{@redshift_copy_options};"
+    sql += " CREDENTIALS 'aws_access_key_id=#{credentials[:access_key_id]};aws_secret_access_key=#{credentials[:secret_access_key]}"
+    sql += ";token=#{credentials[:session_token]}" if credentials[:session_token]
+    sql += "' delimiter '#{@delimiter}' GZIP ESCAPE #{@redshift_copy_base_options} #{@redshift_copy_options};"
 
     $log.debug format_log("start copying. s3_uri=#{s3_uri}")
 
