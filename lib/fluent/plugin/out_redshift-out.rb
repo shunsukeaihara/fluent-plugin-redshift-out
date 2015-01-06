@@ -16,8 +16,8 @@ class RedshiftOutput < BufferedOutput
     require 'pg'
     require 'csv'
     require 'multi_json'
-    require 'oj'
-    ::MultiJson.use(:oj)
+    require 'yajl'
+    ::MultiJson.use(:yajl)
   end
 
   config_param :record_log_tag, :string, :default => 'log'
