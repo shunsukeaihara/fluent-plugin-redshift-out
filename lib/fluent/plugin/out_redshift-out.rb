@@ -20,6 +20,7 @@ class RedshiftOutput < BufferedOutput
     ::MultiJson.use(:yajl)
   end
 
+  # if record_log_tag set 'null' as string, store top-level object
   config_param :record_log_tag, :string, :default => 'log'
   # s3
   config_param :aws_key_id, :string, :default => nil
@@ -80,9 +81,15 @@ class RedshiftOutput < BufferedOutput
     if json?
       record.to_msgpack
     elsif msgpack?
-      { @record_log_tag => record }.to_msgpack
+      if @record_log_tag == 'null'
+        record
+      else
+        { @record_log_tag => record }.to_msgpack
     else
-      "#{record[@record_log_tag]}\n"
+      if @record_log_tag == 'null'
+        "#{record}\n"
+      else
+        "#{record[@record_log_tag]}\n"
     end
   end
 
@@ -180,7 +187,11 @@ class RedshiftOutput < BufferedOutput
       chunk.msgpack_each do |record|
         next unless record
         begin
-          hash = json? ? json_to_hash(record[@record_log_tag]) : record[@record_log_tag]
+          if @record_log_tag == 'null'
+            log_record = record[@record_log_tag]
+          else
+            log_record = record
+          hash = json? ? json_to_hash(log_record) : log_record
           tsv_text = hash_to_table_text(redshift_table_columns, hash, delimiter)
           gzw.write(tsv_text) if tsv_text and not tsv_text.empty?
         rescue => e
